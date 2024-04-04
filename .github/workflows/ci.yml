@@ -1,0 +1,56 @@
+name: Continuous Integration
+
+# Triggers
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  # Linting Job
+  lint:
+    name: Lint with StandardRB
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Set up Ruby
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: 3.1
+      - name: Install dependencies
+        run: bundle install
+      - name: Run StandardRB
+        run: bundle exec standardrb
+
+  # Testing Job
+  test:
+    name: Run RSpec
+    needs: lint
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Set up Ruby
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: 3.1
+      - name: Set RAILS_ENV variable
+        run: export RAILS_ENV=test
+      - name: Install dependencies
+        run: bundle install
+      - name: Run tests
+        run: bundle exec rspec
+
+  # Release Job
+  release:
+    name: Create Release Tag
+    needs: test
+    if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Create Tag
+        run: |
+          TAG="release-$(date +'%Y%m%d%H%M%S')"
+          git tag $TAG
+          git push origin $TAG
