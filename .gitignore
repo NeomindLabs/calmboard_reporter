@@ -6,3 +6,5 @@
 /spec/dummy/log/*.log
 /spec/dummy/storage/
 /spec/dummy/tmp/
+app/controllers/.DS_Store
+.DS_Store
