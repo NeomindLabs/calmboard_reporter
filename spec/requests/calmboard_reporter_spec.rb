@@ -14,8 +14,10 @@ RSpec.describe "CalmboardReporter", type: :request do
 
   it 'responds with encrypted metrics' do
     get '/calmboard_reporter'
+    # Check if the response is successful and contains the encrypted metrics
     expect(response).to have_http_status(:ok)
     expect(JSON.parse(response.body)).to have_key('encrypted_metrics')
+    # Decrypt the encrypted metrics and check if the decrypted data contains the expected keys
     encrypted_metrics = JSON.parse(response.body)['encrypted_metrics']
     key = ActiveSupport::KeyGenerator.new(
       @encryption_key

@@ -11,40 +11,37 @@ Add this line to your application's Gemfile:
 gem "calmboard_reporter"
 ```
 
-And then execute:
+And then run:
 ```bash
 $ bundle
 ```
+## Encrypted Reporting
+This app uses its own unique encryption key to encrypt all apps' metrics reports. You can find the key in [1Password](https://start.1password.com/open/i?a=LCFHDJUCGBGTDBRVBXHMLAL2IU&v=dyxwv6ymobah7m3rf5prichiqq&i=e3yma4g4mokk5alzb2si2s5mdi&h=neomindlabs.1password.com). 
 
-Or install it yourself as:
-```bash
-$ gem install calmboard_reporter
-```
-
-### Setting Up the Encryption Key
-For the security of your data, calmboard_reporter requires an encryption key to encrypt and decrypt the metrics data. It is essential to generate a strong encryption key and set it as an environment variable in your application environment.
-Generating an Encryption Key
-
-You can generate a strong encryption key using a tool like OpenSSL. Open your terminal and run the following command to generate a 32-byte key:
+### Setting Up a New Encryption Key
+You can generate a new encryption key by running:
 
 ```bash
 openssl rand -base64 32
 ```
 
-Copy the generated key as you will need it to set the environment variable.
+After you update it, don't forget to:
+- update it in [1Password](https://start.1password.com/open/i?a=LCFHDJUCGBGTDBRVBXHMLAL2IU&v=dyxwv6ymobah7m3rf5prichiqq&i=e3yma4g4mokk5alzb2si2s5mdi&h=neomindlabs.1password.com)
+- update it in Calmboard's encrypted credentials
+- update it as stored in environment variables for any apps using this gem
 
-### Setting the Environment Variable
-Once you have generated the encryption key, you need to set it as an environment variable on your system. The environment variable is accessed by calmboard_reporter to encrypt and decrypt the metrics data securely.
-
-For a UNIX-like operating system, you can set the environment variable temporarily in your current shell session:
-
-```bash
-export CALMBOARD_REPORTER_ENCRYPTION_KEY='your_generated_key_here'
+### Decrypting the Metrics
+Once this gem is installed and running in an app, Calmboard can then send a GET request to `/calmboard_reporter` (see `lib/calmboard_reporter/engine.rb`). The response will be JSON, like this:
+```json
+{
+  "encrypted_metrics" => "[a long encrypted string]"
+}
 ```
-
-To make this change permanent, add the export statement to your shell's profile script (e.g., `~/.bash_profile` or `~/.bashrc`).
-
-For deployment environments (like Heroku, AWS, etc.), please refer to the specific documentation on setting environment variables for your hosting service.
-
-### Accessing the Encryption Key in Your Application
-`calmboard_reporter` will automatically retrieve the encryption key from the environment variable `CALMBOARD_REPORTER_ENCRYPTION_KEY`. Ensure this variable is set in every environment where the engine is deployed.
+Once you decrypt and parse that long encrypted string value, you'll have a Hash like this:
+```ruby
+{
+  "rails_version" => "7.1.3.2", 
+  "ruby_version" => "3.1.4"
+}
+```
+To see a working decryption process in detail, see `spec/requests/calmboard_reporter_spec.rb`. 
