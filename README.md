@@ -15,6 +15,13 @@ And then run:
 ```bash
 $ bundle
 ```
+
+Finaly, don't forget to set the encryption key on the app using an environment variable:
+```bash
+export CALMBOARD_REPORTER_ENCRYPTION_KEY="the encryption key"
+```
+You can find the key in [1Password](https://start.1password.com/open/i?a=LCFHDJUCGBGTDBRVBXHMLAL2IU&v=dyxwv6ymobah7m3rf5prichiqq&i=e3yma4g4mokk5alzb2si2s5mdi&h=neomindlabs.1password.com).
+
 ## Encrypted Reporting
 This app uses its own unique encryption key to encrypt all apps' metrics reports. You can find the key in [1Password](https://start.1password.com/open/i?a=LCFHDJUCGBGTDBRVBXHMLAL2IU&v=dyxwv6ymobah7m3rf5prichiqq&i=e3yma4g4mokk5alzb2si2s5mdi&h=neomindlabs.1password.com). 
 
