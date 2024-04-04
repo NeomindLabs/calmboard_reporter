@@ -12,7 +12,17 @@ RSpec.describe "CalmboardReporter", type: :request do
     ENV["CALMBOARD_REPORTER_ENCRYPTION_KEY"] = @encryption_key
   end
 
-  it "responds with encrypted metrics" do
+  it "responds with a helpful error message when CALMBOARD_REPORTER_ENCRYPTION_KEY is not set" do
+    # Unset the environment variable
+    ENV.delete("CALMBOARD_REPORTER_ENCRYPTION_KEY")
+    get "/calmboard_reporter"
+    # Check if the response is unsuccessful and contains the error message
+    expect(response).to have_http_status(:unprocessable_entity)
+    expect(JSON.parse(response.body)).to have_key("error")
+    expect(JSON.parse(response.body)["error"]).to eq("CALMBOARD_REPORTER_ENCRYPTION_KEY is not set")
+  end
+
+  it "responds with encrypted metrics when CALMBOARD_REPORTER_ENCRYPTION_KEY is set" do
     get "/calmboard_reporter"
     # Check if the response is successful and contains the encrypted metrics
     expect(response).to have_http_status(:ok)

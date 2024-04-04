@@ -6,7 +6,7 @@ module CalmboardReporter
       metrics = Metrics::Base.check_all
       encrypted_metrics = CalmboardReporter::Encryption.encrypt(metrics.to_json)
       render json: {encrypted_metrics: encrypted_metrics}, status: :ok
-    rescue ArgumentError => e
+    rescue => e
       render json: {error: e.message}, status: :unprocessable_entity
     end
   end
