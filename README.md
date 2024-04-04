@@ -8,7 +8,7 @@ Just add this gem to any Rails app, and it will gather metrics on the app, encry
 Add this line to your application's Gemfile:
 
 ```ruby
-gem "calmboard_reporter"
+gem "calmboard_reporter", git: 'https://github.com/NeomindLabs/calmboard_reporter.git'
 ```
 
 And then run:

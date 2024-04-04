@@ -1,4 +1,4 @@
-require_dependency 'calmboard_reporter/encryption'
+require_dependency "calmboard_reporter/encryption"
 
 module CalmboardReporter
   class MetricsController < ActionController::Base
