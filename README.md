@@ -52,3 +52,8 @@ Once you decrypt and parse that long encrypted string value, you'll have a Hash 
 }
 ```
 To see a working decryption process in detail, see `spec/requests/calmboard_reporter_spec.rb`. 
+
+### Why didn't you use `ActiveSupport::KeyGenerator` and `ActiveSupport::MessageEncryptor`? 
+I agree, this would have been simpler and more Rails-y! But as it turns out, different versions of Rails use different default encryption settings for the same methods (`SHA1` vs `SHA256`, `AEAD` mode `true` vs `false`, etc). Many of these settings are not easily changeable without monkey patching. This makes it very difficult to ensure that a message encrypted by one Rails version will be decryptable by another Rails version. 
+
+Instead, I decided to rely on an explicitly configured implementation of OpenSSL (see: `lib/calmboard_reporter/encryption.rb`), without any Rails specific methods used. 
