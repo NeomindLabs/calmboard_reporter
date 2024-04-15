@@ -4,6 +4,12 @@ A Rails engine that serves encrypted reports about your app for Calmboard.
 ## Usage
 Just add this gem to any Rails app, and it will gather metrics on the app, encrypt them and make them available via a request from Calmboard.
 
+As of now, this gem only gathers two metrics:
+- the version of Ruby that the app is currently running on
+- the version of Rails that the app is
+
+In the future, additional metrics could be added by adding modules to `lib/calmboard_reporter/metrics`.
+
 ## Installation
 Add this line to your application's Gemfile:
 
